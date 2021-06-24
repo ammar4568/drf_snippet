@@ -10,7 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-from pathlib import Path
+from pathlib import Path 
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +28,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+def get_secrets():
+    f = open(str(BASE_DIR) + '/secrets.json',)
+    data = json.load(f)
+    return data
 
 # Application definition
 
@@ -74,11 +79,15 @@ WSGI_APPLICATION = 'tutorial.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+SECRETS = get_secrets()
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'snippets',
+        'USER': 'cybershot',
+        'PASSWORD': SECRETS['DB_PASSWORD'],
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
